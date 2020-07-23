@@ -39,17 +39,19 @@ public class MainActivity extends AppCompatActivity {
         if (permissionsResult) {
             launchCamera();
         }
-
     }
 
     private void launchCamera() {
-        cameraSource = CameraSource.createCamera(MainActivity.this, preview,new BarcodeScannerProcessor(MainActivity.this, textView));
+        cameraSource = CameraSource.createCamera(MainActivity.this, preview);
+        cameraSource.setMachineLearningFrameProcessor(new BarcodeScannerProcessor(MainActivity.this, textView));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        cameraSource.startCameraSource(preview);
+        if (null != cameraSource) {
+            cameraSource.startCameraSource(preview);
+        }
     }
 
     @Override

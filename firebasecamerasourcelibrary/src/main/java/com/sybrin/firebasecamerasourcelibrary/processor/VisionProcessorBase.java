@@ -27,15 +27,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.TaskExecutors;
 import com.google.mlkit.vision.common.InputImage;
 import com.sybrin.firebasecamerasourcelibrary.utils.BitmapUtils;
 import com.sybrin.firebasecamerasourcelibrary.utils.FrameMetadata;
-import com.sybrin.firebasecamerasourcelibrary.utils.ScopedExecutor;
 
 import java.nio.ByteBuffer;
 import java.util.Timer;
-import java.util.TimerTask;
 
 public abstract class VisionProcessorBase<T> implements VisionImageProcessor {
 
@@ -44,10 +41,9 @@ public abstract class VisionProcessorBase<T> implements VisionImageProcessor {
 
     private final ActivityManager activityManager;
     private final Timer fpsTimer = new Timer();
-    private final ScopedExecutor executor;
 
     // Whether this processor is already shut down
-    private boolean isShutdown;
+    private boolean isShutdown = false;
 
     // Used to calculate latency, running in the same thread, no sync needed.
     private int numRuns = 0;
@@ -72,17 +68,6 @@ public abstract class VisionProcessorBase<T> implements VisionImageProcessor {
 
     protected VisionProcessorBase(Context context) {
         activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        executor = new ScopedExecutor(TaskExecutors.MAIN_THREAD);
-        fpsTimer.scheduleAtFixedRate(
-                new TimerTask() {
-                    @Override
-                    public void run() {
-                        framesPerSecond = frameProcessedInOneSecondInterval;
-                        frameProcessedInOneSecondInterval = 0;
-                    }
-                },
-                /* delay= */ 0,
-                /* period= */ 1000);
     }
 
     // -----------------Code for processing single still image----------------------------------------
@@ -90,8 +75,7 @@ public abstract class VisionProcessorBase<T> implements VisionImageProcessor {
     public void processBitmap(Bitmap bitmap) {
         requestDetectInImage(
                 InputImage.fromBitmap(bitmap, 0),
-                /* originalCameraImage= */ null,
-                /* shouldShowFps= */ false);
+                /* originalCameraImage= */ bitmap);
     }
 
     // -----------------Code for processing live preview frame from Camera1 API-----------------------
@@ -128,20 +112,17 @@ public abstract class VisionProcessorBase<T> implements VisionImageProcessor {
                         frameMetadata.getHeight(),
                         frameMetadata.getRotation(),
                         InputImage.IMAGE_FORMAT_NV21),
-                bitmap,
-                /* shouldShowFps= */ true)
-                .addOnSuccessListener(executor, results -> processLatestImage());
+                bitmap)
+                .addOnSuccessListener(results -> processLatestImage());
     }
 
     // -----------------Common processing logic-------------------------------------------------------
     private Task<T> requestDetectInImage(
             final InputImage image,
-            @Nullable final Bitmap originalCameraImage,
-            boolean shouldShowFps) {
+            @Nullable final Bitmap originalCameraImage) {
         final long startMs = SystemClock.elapsedRealtime();
         return detectInImage(image)
                 .addOnSuccessListener(
-                        executor,
                         results -> {
                             long currentLatencyMs = SystemClock.elapsedRealtime() - startMs;
                             numRuns++;
@@ -164,10 +145,8 @@ public abstract class VisionProcessorBase<T> implements VisionImageProcessor {
 
 
                             VisionProcessorBase.this.onSuccess(results, originalCameraImage);
-
                         })
                 .addOnFailureListener(
-                        executor,
                         e -> {
                             String error = "Failed to process. Error: " + e.getLocalizedMessage();
                             Log.d(TAG, error);
@@ -178,7 +157,6 @@ public abstract class VisionProcessorBase<T> implements VisionImageProcessor {
 
     @Override
     public void stop() {
-        executor.shutdown();
         isShutdown = true;
         numRuns = 0;
         totalRunMs = 0;

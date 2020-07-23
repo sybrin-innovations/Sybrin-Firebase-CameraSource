@@ -46,6 +46,7 @@ public class BarcodeScannerProcessor extends VisionProcessorBase<List<Barcode>> 
              .setBarcodeFormats(Barcode.FORMAT_PDF417)
              .build();
         barcodeScanner = BarcodeScanning.getClient();
+
     }
 
     @Override

@@ -196,6 +196,7 @@ public class CameraSource {
         camera.startPreview();
 
         processingThread = new Thread(processingRunnable);
+        processingThread.setName("Camera Thread");
         processingRunnable.setActive(true);
         processingThread.start();
 
@@ -759,10 +760,9 @@ public class CameraSource {
 
     private static CameraSource cameraSource;
 
-    private static void launchCamera(Activity activity, CameraSourcePreview preview, VisionImageProcessor processor) {
+    private static void launchCamera(Activity activity, CameraSourcePreview preview) {
         if (cameraSource == null) {
             cameraSource = new CameraSource(activity);
-            cameraSource.setMachineLearningFrameProcessor(processor);
         }
 
         try {
@@ -773,8 +773,8 @@ public class CameraSource {
         }
     }
 
-    public static CameraSource createCamera(Activity activity, CameraSourcePreview preview, VisionImageProcessor processor) {
-        launchCamera(activity, preview, processor);
+    public static CameraSource createCamera(Activity activity, CameraSourcePreview preview) {
+        launchCamera(activity, preview);
         return cameraSource;
     }
 
