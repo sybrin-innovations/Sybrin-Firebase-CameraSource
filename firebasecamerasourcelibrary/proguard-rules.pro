@@ -20,3 +20,8 @@
 -keepclassmembers class com.sybrin.firebasecamerasourcelibrary.utils.PermissionsHandler{
     public *;
 }
+
+-keep class com.sybrin.firebasecamerasourcelibrary.views.TorchView
+-keepclassmembers class com.sybrin.firebasecamerasourcelibrary.views.TorchView{
+    public *;
+}
