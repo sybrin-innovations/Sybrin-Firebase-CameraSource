@@ -6,11 +6,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import com.sybrin.firebasecamerasourcelibrary.camera.CameraSource;
 import com.sybrin.firebasecamerasourcelibrary.camera.CameraSourcePreview;
+import com.sybrin.firebasecamerasourcelibrary.camera.TorchController;
 import com.sybrin.firebasecamerasourcelibrary.utils.PermissionsHandler;
+import com.sybrin.firebasecamerasourcelibrary.views.TorchView;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -195,6 +195,8 @@ public class CameraSource {
         camera.setPreviewDisplay(surfaceHolder);
         camera.startPreview();
 
+        cameraSourceReadyInterface.onReady(camera);
+
         processingThread = new Thread(processingRunnable);
         processingThread.setName("Camera Thread");
         processingRunnable.setActive(true);
@@ -276,6 +278,11 @@ public class CameraSource {
     }
 
     private Camera cameraInit;
+
+    public Camera getCamera() {
+        return camera;
+    }
+
     private int requestedCameraId;
 
     /**
@@ -758,7 +765,13 @@ public class CameraSource {
         }
     }
 
+
     private static CameraSource cameraSource;
+    private static CameraReadyInterface cameraSourceReadyInterface;
+
+    public static void getCameraWhenReady(CameraReadyInterface cameraSourceReady){
+        cameraSourceReadyInterface = cameraSourceReady;
+    }
 
     private static void launchCamera(Activity activity, CameraSourcePreview preview) {
         if (cameraSource == null) {
