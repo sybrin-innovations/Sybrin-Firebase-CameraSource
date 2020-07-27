@@ -24,7 +24,6 @@ import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
-import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Surface;
@@ -37,7 +36,6 @@ import androidx.annotation.RequiresPermission;
 import com.google.android.gms.common.images.Size;
 import com.sybrin.firebasecamerasourcelibrary.processor.VisionImageProcessor;
 import com.sybrin.firebasecamerasourcelibrary.utils.FrameMetadata;
-import com.sybrin.firebasecamerasourcelibrary.utils.PermissionsHandler;
 import com.sybrin.firebasecamerasourcelibrary.utils.PreferenceUtils;
 
 import java.io.IOException;
@@ -64,7 +62,7 @@ public class CameraSource {
     public static final int DEFAULT_REQUESTED_CAMERA_PREVIEW_WIDTH = 1920;
     public static final int DEFAULT_REQUESTED_CAMERA_PREVIEW_HEIGHT = 1080;
 
-    private static final String TAG = "MIDemoApp:CameraSource";
+    private static final String TAG = "Sybrin:CameraSource";
 
     /**
      * The dummy surface texture must be assigned a chosen name. Since we never use an OpenGL context,
@@ -765,6 +763,9 @@ public class CameraSource {
         }
     }
 
+    // ==============================================================================================
+    // CameraSource initialization and Preview shaping
+    // ==============================================================================================
 
     private static CameraSource cameraSource;
     private static CameraReadyInterface cameraSourceReadyInterface;

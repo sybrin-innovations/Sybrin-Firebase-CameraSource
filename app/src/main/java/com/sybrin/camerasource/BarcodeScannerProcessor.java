@@ -35,7 +35,7 @@ import com.sybrin.firebasecamerasourcelibrary.processor.VisionProcessorBase;
 import java.util.List;
 
 public class BarcodeScannerProcessor extends VisionProcessorBase<List<Barcode>> {
-    private static final String TAG = "BarcodeProcessor";
+    private static final String TAG = "Sybrin:BarcodeProcessor";
     private final TextView feedbackTextView;
     private final BarcodeScanner barcodeScanner;
 
@@ -64,7 +64,7 @@ public class BarcodeScannerProcessor extends VisionProcessorBase<List<Barcode>> 
     protected void onSuccess(
             @NonNull List<Barcode> barcodes, @NonNull Bitmap originalImage) {
         if (barcodes.isEmpty()) {
-            Log.v(MANUAL_TESTING_LOG, "No barcode has been detected");
+            Log.v(TAG, "No barcode has been detected");
             feedbackTextView.setText("No barcode has been detected");
         }
         for (int i = 0; i < barcodes.size(); ++i) {
@@ -77,36 +77,36 @@ public class BarcodeScannerProcessor extends VisionProcessorBase<List<Barcode>> 
     private static void logExtrasForTesting(Barcode barcode) {
         if (barcode != null) {
             Log.v(
-                    MANUAL_TESTING_LOG,
+                    TAG,
                     String.format(
                             "Detected barcode's bounding box: %s", barcode.getBoundingBox().flattenToString()));
             Log.v(
-                    MANUAL_TESTING_LOG,
+                    TAG,
                     String.format(
                             "Expected corner point size is 4, get %d", barcode.getCornerPoints().length));
             for (Point point : barcode.getCornerPoints()) {
                 Log.v(
-                        MANUAL_TESTING_LOG,
+                        TAG,
                         String.format("Corner point is located at: x = %d, y = %d", point.x, point.y));
             }
-            Log.v(MANUAL_TESTING_LOG, "barcode display value: " + barcode.getDisplayValue());
-            Log.v(MANUAL_TESTING_LOG, "barcode raw value: " + barcode.getRawValue());
+            Log.v(TAG, "barcode display value: " + barcode.getDisplayValue());
+            Log.v(TAG, "barcode raw value: " + barcode.getRawValue());
             Barcode.DriverLicense dl = barcode.getDriverLicense();
             if (dl != null) {
-                Log.v(MANUAL_TESTING_LOG, "driver license city: " + dl.getAddressCity());
-                Log.v(MANUAL_TESTING_LOG, "driver license state: " + dl.getAddressState());
-                Log.v(MANUAL_TESTING_LOG, "driver license street: " + dl.getAddressStreet());
-                Log.v(MANUAL_TESTING_LOG, "driver license zip code: " + dl.getAddressZip());
-                Log.v(MANUAL_TESTING_LOG, "driver license birthday: " + dl.getBirthDate());
-                Log.v(MANUAL_TESTING_LOG, "driver license document type: " + dl.getDocumentType());
-                Log.v(MANUAL_TESTING_LOG, "driver license expiry date: " + dl.getExpiryDate());
-                Log.v(MANUAL_TESTING_LOG, "driver license first name: " + dl.getFirstName());
-                Log.v(MANUAL_TESTING_LOG, "driver license middle name: " + dl.getMiddleName());
-                Log.v(MANUAL_TESTING_LOG, "driver license last name: " + dl.getLastName());
-                Log.v(MANUAL_TESTING_LOG, "driver license gender: " + dl.getGender());
-                Log.v(MANUAL_TESTING_LOG, "driver license issue date: " + dl.getIssueDate());
-                Log.v(MANUAL_TESTING_LOG, "driver license issue country: " + dl.getIssuingCountry());
-                Log.v(MANUAL_TESTING_LOG, "driver license number: " + dl.getLicenseNumber());
+                Log.v(TAG, "driver license city: " + dl.getAddressCity());
+                Log.v(TAG, "driver license state: " + dl.getAddressState());
+                Log.v(TAG, "driver license street: " + dl.getAddressStreet());
+                Log.v(TAG, "driver license zip code: " + dl.getAddressZip());
+                Log.v(TAG, "driver license birthday: " + dl.getBirthDate());
+                Log.v(TAG, "driver license document type: " + dl.getDocumentType());
+                Log.v(TAG, "driver license expiry date: " + dl.getExpiryDate());
+                Log.v(TAG, "driver license first name: " + dl.getFirstName());
+                Log.v(TAG, "driver license middle name: " + dl.getMiddleName());
+                Log.v(TAG, "driver license last name: " + dl.getLastName());
+                Log.v(TAG, "driver license gender: " + dl.getGender());
+                Log.v(TAG, "driver license issue date: " + dl.getIssueDate());
+                Log.v(TAG, "driver license issue country: " + dl.getIssuingCountry());
+                Log.v(TAG, "driver license number: " + dl.getLicenseNumber());
             }
         }
     }

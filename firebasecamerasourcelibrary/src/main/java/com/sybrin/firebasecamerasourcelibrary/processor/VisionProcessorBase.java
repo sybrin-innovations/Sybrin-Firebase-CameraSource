@@ -36,24 +36,23 @@ import java.util.Timer;
 
 public abstract class VisionProcessorBase<T> implements VisionImageProcessor {
 
-    protected static final String MANUAL_TESTING_LOG = "LogTagForTest";
-    private static final String TAG = "VisionProcessorBase";
+    private static final String TAG = "Sybrin:VisionProcessor";
 
     private final ActivityManager activityManager;
-    private final Timer fpsTimer = new Timer();
+//    private final Timer fpsTimer = new Timer();
 
     // Whether this processor is already shut down
     private boolean isShutdown = false;
 
     // Used to calculate latency, running in the same thread, no sync needed.
-    private int numRuns = 0;
-    private long totalRunMs = 0;
-    private long maxRunMs = 0;
-    private long minRunMs = Long.MAX_VALUE;
+//    private int numRuns = 0;
+//    private long totalRunMs = 0;
+//    private long maxRunMs = 0;
+//    private long minRunMs = Long.MAX_VALUE;
 
     // Frame count that have been processed so far in an one second interval to calculate FPS.
     private int frameProcessedInOneSecondInterval = 0;
-    private int framesPerSecond = 0;
+//    private int framesPerSecond = 0;
 
     // To keep the latest images and its metadata.
     @GuardedBy("this")
@@ -120,28 +119,28 @@ public abstract class VisionProcessorBase<T> implements VisionImageProcessor {
     private Task<T> requestDetectInImage(
             final InputImage image,
             @Nullable final Bitmap originalCameraImage) {
-        final long startMs = SystemClock.elapsedRealtime();
+//        final long startMs = SystemClock.elapsedRealtime();
         return detectInImage(image)
                 .addOnSuccessListener(
                         results -> {
-                            long currentLatencyMs = SystemClock.elapsedRealtime() - startMs;
-                            numRuns++;
-                            frameProcessedInOneSecondInterval++;
-                            totalRunMs += currentLatencyMs;
-                            maxRunMs = Math.max(currentLatencyMs, maxRunMs);
-                            minRunMs = Math.min(currentLatencyMs, minRunMs);
-
-                            // Only log inference info once per second. When frameProcessedInOneSecondInterval is
-                            // equal to 1, it means this is the first frame processed during the current second.
-                            if (frameProcessedInOneSecondInterval == 1) {
-                                Log.d(TAG, "Max latency is: " + maxRunMs);
-                                Log.d(TAG, "Min latency is: " + minRunMs);
-                                Log.d(TAG, "Num of Runs: " + numRuns + ", Avg latency is: " + totalRunMs / numRuns);
-                                MemoryInfo mi = new MemoryInfo();
-                                activityManager.getMemoryInfo(mi);
-                                long availableMegs = mi.availMem / 0x100000L;
-                                Log.d(TAG, "Memory available in system: " + availableMegs + " MB");
-                            }
+//                            long currentLatencyMs = SystemClock.elapsedRealtime() - startMs;
+////                            numRuns++;
+//                            frameProcessedInOneSecondInterval++;
+////                            totalRunMs += currentLatencyMs;
+////                            maxRunMs = Math.max(currentLatencyMs, maxRunMs);
+////                            minRunMs = Math.min(currentLatencyMs, minRunMs);
+//
+//                            // Only log inference info once per second. When frameProcessedInOneSecondInterval is
+//                            // equal to 1, it means this is the first frame processed during the current second.
+//                            if (frameProcessedInOneSecondInterval == 1) {
+////                                Log.d(TAG, "Max latency is: " + maxRunMs);
+////                                Log.d(TAG, "Min latency is: " + minRunMs);
+////                                Log.d(TAG, "Num of Runs: " + numRuns + ", Avg latency is: " + totalRunMs / numRuns);
+//                                MemoryInfo mi = new MemoryInfo();
+//                                activityManager.getMemoryInfo(mi);
+//                                long availableMegs = mi.availMem / 0x100000L;
+//                                Log.d(TAG, "Memory available in system: " + availableMegs + " MB");
+//                            }
 
 
                             VisionProcessorBase.this.onSuccess(results, originalCameraImage);
@@ -158,9 +157,9 @@ public abstract class VisionProcessorBase<T> implements VisionImageProcessor {
     @Override
     public void stop() {
         isShutdown = true;
-        numRuns = 0;
-        totalRunMs = 0;
-        fpsTimer.cancel();
+//        numRuns = 0;
+//        totalRunMs = 0;
+//        fpsTimer.cancel();
     }
 
     protected abstract Task<T> detectInImage(InputImage image);
